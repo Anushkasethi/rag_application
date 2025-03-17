@@ -3,7 +3,6 @@ uvicorn
 langchain
 sentence-transformers
 faiss-cpu
-faiss
 beautifulsoup4
 python-multipart
 rank_bm25
