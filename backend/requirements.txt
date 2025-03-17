@@ -10,5 +10,6 @@ langchain-community
 langchain-core
 nltk
 pdfplumber
+cohere
 # fitz
 # PyMuPDF==1.24.13
