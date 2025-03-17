@@ -7,8 +7,5 @@ pdfplumber
 beautifulsoup4
 python-multipart
 rank_bm25
-ollama
-llama-cpp-python
-gpt4all
-openai
-langchain-openai
+langchain-community 
+langchain-core

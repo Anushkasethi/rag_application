@@ -7,8 +7,6 @@ from rank_bm25 import BM25Okapi
 import nltk
 nltk.download('punkt')
 from nltk.tokenize import word_tokenize
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage
 from pdf_html_extractor import extract_text_from_pdf, extract_text_from_html
 from dotenv import load_dotenv
 import cohere, os
@@ -22,28 +20,25 @@ def get_cohere_api_key():
     if not api_key:
         raise EnvironmentError("COHERE_API_KEY environment variable not set.")
     return api_key
+
 load_dotenv()
 api_key = get_cohere_api_key()
 cohere_client = cohere.Client(api_key)
+
 class GraphRAGPipeline:
     def __init__(self):
         self.graph = nx.Graph()
         self.faiss_index = None
         self.bm25_index = None
         self.chunks = []
-        # self.llm = ChatOpenAI(temperature=0.7, model="gpt-4")  # Using ChatOpenAI
 
     def process_document(self, file_path):
-        # Step 1: Extract Text from PDF/HTML
         if file_path.endswith(".pdf"):
             text = extract_text_from_pdf(file_path)
         else:
             text = extract_text_from_html(file_path)
 
-        # Step 2: Chunk the text
         self.chunks = [text[i:i + 500] for i in range(0, len(text), 500)]
-
-        # Step 3: Create Semantic Embeddings
         embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
         self.faiss_index = FAISS.from_texts(self.chunks, embeddings)
         self.faiss_index.save_local("faiss_index")
@@ -51,16 +46,13 @@ class GraphRAGPipeline:
         chunk_embeddings = self.faiss_index.index.reconstruct_n(0, len(self.chunks))  # Get embeddings
         similarity_matrix = cosine_similarity(chunk_embeddings)
         
-        # Step 4: Build Graph
         for i, chunk in enumerate(self.chunks):
             self.graph.add_node(i, text=chunk) 
-        # Add edges based on high similarity
         for i in range(len(self.chunks)):
             for j in range(i + 1, len(self.chunks)):
-                if similarity_matrix[i][j] > 0.7:  # Adjust threshold based on tuning
+                if similarity_matrix[i][j] > 0.7:  
                     self.graph.add_edge(i, j, weight=similarity_matrix[i][j])
        
-        # Step 5: Build BM25 Index (for Keyword Search)
         tokenized_chunks = [word_tokenize(chunk.lower()) for chunk in self.chunks]
         self.bm25_index = BM25Okapi(tokenized_chunks, k1=1.5, b=0.75)
 
@@ -78,19 +70,13 @@ class GraphRAGPipeline:
     def graph_rag_search(self, query):
         faiss_results = self.semantic_search(query)
         
-        # Get the indices of retrieved chunks
         seed_nodes = [self.chunks.index(doc.page_content) for doc, _ in faiss_results]
-        
-        # Compute Personalized PageRank (seeding with query-relevant nodes)
         personalization = {node: 1 if node in seed_nodes else 0 for node in self.graph.nodes}
         pagerank_scores = nx.pagerank(self.graph, personalization=personalization, alpha=0.85)
 
-        # Rank nodes based on PageRank scores
         ranked_nodes = sorted(pagerank_scores.items(), key=lambda x: x[1], reverse=True)
-
-        # Retrieve top-ranked chunks as additional context
         results_with_context = []
-        for node, score in ranked_nodes[:5]:  # Get top 5 contextually relevant chunks
+        for node, score in ranked_nodes[:5]:  
             context_chunks = [self.graph.nodes[neighbor]['text'] for neighbor in self.graph.neighbors(node)]
             results_with_context.append((self.graph.nodes[node]['text'], context_chunks, score))
 
