@@ -20,9 +20,7 @@ def get_cohere_api_key():
         raise EnvironmentError("COHERE_API_KEY environment variable not set.")
     return api_key
 
-load_dotenv()
-api_key = get_cohere_api_key()
-cohere_client = cohere.Client(api_key)
+
 
 class GraphRAGPipeline:
     def __init__(self):
@@ -30,6 +28,9 @@ class GraphRAGPipeline:
         self.faiss_index = None
         self.bm25_index = None
         self.chunks = []
+        load_dotenv()
+        api_key = get_cohere_api_key()
+        self.cohere_client = cohere.Client(api_key)
 
     def process_document(self, file_path):
         if file_path.endswith(".pdf"):
@@ -113,7 +114,7 @@ class GraphRAGPipeline:
         for result in results:
             prompt += f"Source: {result['source']} | Text: {result['text']} | Score: {result['score']}\n\n"
 
-        response = cohere_client.chat(
+        response = self.cohere_client.chat(
             model="command-xlarge-nightly",
             message=prompt,
             max_tokens=1500,
