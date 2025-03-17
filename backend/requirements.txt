@@ -6,12 +6,9 @@ faiss-cpu
 beautifulsoup4
 python-multipart
 rank_bm25
-# langchain-community 
 langchain-core
 nltk
 pdfplumber
 cohere
 python-dotenv
 psutil
-# fitz
-# PyMuPDF==1.24.13
