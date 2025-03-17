@@ -7,7 +7,8 @@ const UploadComponent = () => {
     const formData = new FormData();
     formData.append('file', file);
 
-    await fetch('http://localhost:8000/upload/', {
+    // await fetch('http://localhost:8000/upload/', {
+    await fetch('https://rag-application-w3yj.onrender.com/upload/', {
       method: 'POST',
       body: formData
     });
