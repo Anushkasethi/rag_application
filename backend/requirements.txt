@@ -3,9 +3,9 @@ uvicorn
 langchain
 sentence-transformers
 faiss-cpu
-pdfplumber
 beautifulsoup4
 python-multipart
 rank_bm25
 langchain-community 
 langchain-core
+nltk

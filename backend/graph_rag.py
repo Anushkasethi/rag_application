@@ -5,7 +5,6 @@ import numpy as np
 import networkx as nx
 from rank_bm25 import BM25Okapi
 import nltk
-nltk.download('punkt')
 from nltk.tokenize import word_tokenize
 from pdf_html_extractor import extract_text_from_pdf, extract_text_from_html
 from dotenv import load_dotenv
