@@ -31,7 +31,7 @@ def get_memory_usage():
     return mem_info.rss / (1024 * 1024)
 
 class GraphRAGPipeline:
-    def __init__(self):
+    def __init__(self, model_name):
         self.graph = nx.Graph()
         self.faiss_index = None
         self.bm25_index = None
@@ -40,7 +40,7 @@ class GraphRAGPipeline:
         api_key = get_cohere_api_key()
         self.cohere_client = cohere.Client(api_key)
 
-        self.nlp = spacy.load("en_core_web_sm")
+        self.nlp = spacy.load(model_name)
     
     # @profile
     # def load_embeddings(self):

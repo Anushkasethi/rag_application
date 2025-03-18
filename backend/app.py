@@ -5,6 +5,10 @@ import os
 app = FastAPI()
 from fastapi.middleware.cors import CORSMiddleware
 
+import subprocess
+import shutil
+import spacy
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -14,8 +18,9 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-
-graph_rag = GraphRAGPipeline()
+model_name = "en_core_web_sm"
+subprocess.run(["python", "-m", "spacy", "download", model_name])
+graph_rag = GraphRAGPipeline(model_name)
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
