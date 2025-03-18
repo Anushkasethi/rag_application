@@ -7,10 +7,14 @@ const UploadComponent = () => {
     const formData = new FormData();
     formData.append('file', file);
 
-    // await fetch('http://localhost:8000/upload/', {
-    await fetch('https://rag-application-w3yj.onrender.com/upload/', {
+    console.log("form data", formData);
+
+    await fetch('http://localhost:8000/upload/', {
+    // await fetch('https://rag-application-w3yj.onrender.com/upload/', {
+    // await fetch('http://3.80.81.200.nip.io:8000/upload/', {
       method: 'POST',
-      body: formData
+      body: formData,
+      mode: 'no-cors',
     });
   };
 
