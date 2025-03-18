@@ -1,10 +1,29 @@
 # RAG Application
-![RAG Application](https://github.com/Anushkasethi/rag_application/blob/master/example.png?raw=true)
+![RAG Application](https://github.com/Anushkasethi/rag_application/blob/master/rag_example.png?raw=true)
 ## Overview  
 This project is a FastAPI-based document retrieval system that supports **semantic and keyword search**.  
 The application processes uploaded **PDF documents/HTML Websites** and allows users to query them efficiently.  
 The system integrates **NLP techniques and APIs** to enhance the relevance of retrieved results.
 
+---
+## How to Run Locally
+
+To test run this project, follow the steps below:
+### Steps to Run
+
+#### Terminal 1: Run the Frontend
+```sh
+cd frontend
+npm install
+npm run dev
+```
+
+#### Terminal 2: Run the Backend
+```sh
+cd backend
+pip install -r requirements.txt
+uvicorn app:app --reload
+```
 ---
 
 ## Features
