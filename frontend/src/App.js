@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div>
-      <h1>GraphRAG Search</h1>
+      <h1>RAG Application</h1>
       <UploadComponent />
       <SearchComponent onSearchResults={handleSearchResults} />
       <div>

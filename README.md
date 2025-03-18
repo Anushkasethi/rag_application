@@ -1,8 +1,8 @@
 # RAG Application
-
+![RAG Application](https://github.com/Anushkasethi/rag_application/blob/master/example.png?raw=true)
 ## Overview  
 This project is a FastAPI-based document retrieval system that supports **semantic and keyword search**.  
-The application processes uploaded **PDF documents** and allows users to query them efficiently.  
+The application processes uploaded **PDF documents/HTML Websites** and allows users to query them efficiently.  
 The system integrates **NLP techniques and APIs** to enhance the relevance of retrieved results.
 
 ---
