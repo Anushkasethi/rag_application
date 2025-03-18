@@ -1,5 +1,5 @@
 # from langchain_community.embeddings import SentenceTransformerEmbeddings
-from sentence_transformers import SentenceTransformer
+import spacy
 import faiss
 # from langchain_community.vectorstores import FAISS
 # from sklearn.metrics.pairwise import cosine_similarity
@@ -40,6 +40,7 @@ class GraphRAGPipeline:
         api_key = get_cohere_api_key()
         self.cohere_client = cohere.Client(api_key)
 
+        self.nlp = spacy.load("en_core_web_sm")
     
     # @profile
     # def load_embeddings(self):
@@ -55,9 +56,10 @@ class GraphRAGPipeline:
             text = extract_text_from_html(file_path)
 
         self.chunks = [text[i:i + 500] for i in range(0, len(text), 500)]
+        
+
         before_mem = get_memory_usage()
-        embeddings = SentenceTransformer("paraphrase-MiniLM-L3-v2")
-        chunk_embeddings = embeddings.encode(self.chunks, batch_size=8)
+        chunk_embeddings = np.array([self.nlp(text).vector for text in self.chunks])
         # chunk_embeddings = self.faiss_index.index.reconstruct_n(0, len(self.chunks))  # Get embeddings
         after_mem = get_memory_usage()
         print(f"<><><> MEMORY USAGE: {after_mem - before_mem:.2f} MB")
@@ -95,11 +97,7 @@ class GraphRAGPipeline:
         if self.faiss_index is None:
             self.faiss_index = faiss.read_index("faiss_index")
 
-        if not hasattr(self, "embedding_model"):
-            self.embedding_model = SentenceTransformer("paraphrase-MiniLM-L3-v2")
-
-        query_embedding = self.embedding_model.encode([query])
-        
+        query_embedding = np.array([self.nlp(query).vector], dtype=np.float32)
         if not self.faiss_index.is_trained:
             print("FAISS index is not trained.")
             return []

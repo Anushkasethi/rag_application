@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 langchain
-sentence-transformers
+spacy
 faiss-cpu
 beautifulsoup4
 python-multipart
@@ -12,3 +12,4 @@ pdfplumber
 cohere
 python-dotenv
 psutil
+networkx
